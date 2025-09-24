@@ -201,22 +201,20 @@ def main():
     # parser.add_argument()
     args = parser.parse_args()
     print(args)
-    # 加载训练集
     seed_everything(args.seed)
     print("seed:", args.seed)
-    train_temp = EchoData("train_video", split='train')
-    train = dataset_Con("train_video", split='train')
-    val = EchoData("train_video", split='val')
-    test = EchoData("train_video", split='test')
+    train_temp = EchoData(args.train_file_path, split='train')
+    train = dataset_Con(args.train_file_path, split='train')
+    val = EchoData(args.train_file_path, split='val')
+    test = EchoData(args.train_file_path, split='test')
     
-    # 计算C-mixup rates
+
     labels = train.get_labels()
     filenames = train.get_filenames()
     print(max(labels))
     print(min(labels))
     import numpy as np
     print(np.mean(np.array(labels)))
-    # filenames 与index 对应的字典
     name2idx = {}
     for idx, i in enumerate(filenames):
         name2idx[i] = idx
@@ -251,16 +249,12 @@ def main():
     checkpoint_pth = 'save/L1SG_uniformer_small_ep_60_lr_0.0001_d_0.1_wd_0.0001_bsz_16_aug_True/best.pth'
     checkpoint = torch.load(checkpoint_pth)['model']
 
-    # model = uniformer_small()
     model = uniformer("uniformer_small", checkpoint)
-    # model.load_state_dict(checkpoint, strict=False)
-    model = model.to(device)
 
+    model = model.to(device)
     regressor = get_shallow_mlp_head()
     regressor = regressor.to(device)
 
-    
-     # train loss
     if args.criterion1 == 'L1':
         criterion1 = weighted_l1_loss
     elif args.criterion1 == 'MSE':
