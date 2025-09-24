@@ -10,17 +10,21 @@ df_in = pd.read_csv('results/inter_results.csv')
 predicts = list(df_in['predicts'].values)
 truths = list(df_in['truth'].values)
 
-
 df_ex = pd.read_csv('results/exter_results.csv')
 ex_predicts = list(df_ex['predicts'].values)
 ex_truths = list(df_ex['truth'].values)
 
+
 clinical_threshold = 45
+
+clinical_threshold = 45
+
 
 y_true_binary_int = np.array([1 if ef < clinical_threshold else 0 for ef in truths])
 distance_from_threshold_int = clinical_threshold - np.array(predicts)
 y_pred_prob_int = 1 / (1 + np.exp(-distance_from_threshold_int / 5))
 y_pred_prob_int = np.clip(y_pred_prob_int, 0, 1)
+
 
 y_true_binary_ext = np.array([1 if ef < clinical_threshold else 0 for ef in ex_truths])
 distance_from_threshold_ext = clinical_threshold - np.array(ex_predicts)
@@ -34,6 +38,18 @@ auc_ext = auc(fpr_ext, tpr_ext)
 
 n_bootstraps = 10000
 rng_seed = 42
+
+fpr_int, tpr_int, _ = roc_curve(y_true_binary_int, y_pred_prob_int)
+fpr_ext, tpr_ext, _ = roc_curve(y_true_binary_ext, y_pred_prob_ext)
+
+# 计算AUC值
+auc_int = auc(fpr_int, tpr_int)
+auc_ext = auc(fpr_ext, tpr_ext)
+
+# 步骤4: 使用Bootstrap计算置信区间
+n_bootstraps = 10000  # 根据图片信息，使用10000次bootstrap
+rng_seed = 42
+
 
 bootstrapped_auc_int = []
 tprs_int = []
@@ -66,7 +82,6 @@ for i in range(n_bootstraps):
     interp_tpr[0] = 0.0
     tprs_ext.append(interp_tpr)
 
-
 auc_int_ci_lower = np.percentile(bootstrapped_auc_int, 2.5)
 auc_int_ci_upper = np.percentile(bootstrapped_auc_int, 97.5)
 auc_ext_ci_lower = np.percentile(bootstrapped_auc_ext, 2.5)
@@ -80,7 +95,12 @@ tpr_int_upper = np.percentile(tprs_int, 97.5, axis=0)
 tpr_ext_lower = np.percentile(tprs_ext, 2.5, axis=0)
 tpr_ext_upper = np.percentile(tprs_ext, 97.5, axis=0)
 
+
 fig, ax = plt.subplots(figsize=(10, 10))
+
+
+fig, ax = plt.subplots(figsize=(10, 10))
+
 
 ax.plot(fpr_int, tpr_int, color='blue', lw=2, 
          label=f'Internal validation (AUC = {auc_int:.3f} [95% CI: {auc_int_ci_lower:.3f}-{auc_int_ci_upper:.3f}])')
@@ -91,6 +111,10 @@ ax.plot(fpr_ext, tpr_ext, color='red', lw=2,
 ax.fill_between(base_fpr, tpr_ext_lower, tpr_ext_upper, color='red', alpha=0.2)
 
 ax.plot([0, 1], [0, 1], color='gray', linestyle='--', lw=1, label='Random classifier (AUC = 0.5)')
+
+
+ax.plot([0, 1], [0, 1], color='gray', linestyle='--', lw=1, label='Random classifier (AUC = 0.5)')
+
 
 ax.set_xlim([0.0, 1.0])
 ax.set_ylim([0.0, 1.05])

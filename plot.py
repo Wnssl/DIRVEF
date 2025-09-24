@@ -223,7 +223,11 @@ def bland_altman_plot(predicted, actual, save_path=None):
                framealpha=0.85,
                facecolor='white', 
                edgecolor='#CCCCCC',
+<<<<<<< HEAD
                bbox_to_anchor=(1.4, 1), 
+=======
+               bbox_to_anchor=(1, 1), 
+>>>>>>> 3e132be82c8488f14c8aaa739a31fe7d0418076d
                borderaxespad=0.)
     
     # 添加参考零线
