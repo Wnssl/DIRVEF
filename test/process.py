@@ -1,4 +1,3 @@
-
 import torch
 from skimage import transform
 import numpy as np
@@ -109,13 +108,6 @@ def get_preprocessed_tensor(avi_file_path, orientation="Stanford"):
 
     x_norm = (x - x_min) / (x_max - x_min)  # 归一化到0-1
     x_255 = (x_norm * 255).astype(np.uint8)
-
-    # for i in x_255:
-    #     cv2.imshow("1", i)
-    #     cv2.waitKey(0)
-
-
-
 
     return x_255
 

@@ -90,7 +90,6 @@ def train_one_epoch(model, regressor, device, optimizer, optimizer_reg, epoch, c
         if batch_idx % 10 == 0:
             print(f':epoch: {epoch}  batch_idx: {batch_idx}  batch loss: {loss_reg.item()}')
 
-    # torch.save(model, f'cnn/cnn_{epoch}.pt')
     avg_loss = total_loss / len(train_loader)
     print(f"epoch : {epoch} mAE:{avg_loss}")
 
@@ -118,7 +117,6 @@ def test_one_epoch(model, regressor,device, criterion,epoch, validation_loader):
         predict_total_loss += loss.item()
     avg_loss_val = predict_total_loss / len(validation_loader)
     print(f'epoch:{epoch} avg loss:{avg_loss_val}')
-
     return avg_loss_val
 
 
@@ -213,15 +211,14 @@ def main():
     filenames = train.get_filenames()
     print(max(labels))
     print(min(labels))
-    import numpy as np
+
+    bandwidth = round((max(labels)- min(labels)),-1)
     print(np.mean(np.array(labels)))
     name2idx = {}
     for idx, i in enumerate(filenames):
         name2idx[i] = idx
-    
-    # print(name2idx)
-    rates = get_mixup_rate(np.array(labels))
-    # print(rates)
+
+    rates = get_mixup_rate(np.array(labels), bandwidth=bandwidth)
     
     print(f"train length : {len(train)}")
     print(f"val length : {len(val)}")

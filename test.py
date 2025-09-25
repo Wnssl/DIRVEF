@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 import json
-
+from tqdm import tqdm
 
 def make_json():
     from datetime import datetime
@@ -40,13 +40,10 @@ def make_json():
 
 if __name__ == '__main__':
     # cuda
-    from tqdm import tqdm
-
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("正在构建数据集")
     from test.test_dataset import test_dataset
     from dataset import EchoData
-    from torch.utils.data import DataLoader, random_split, ConcatDataset
 
     test = test_dataset("D:\\pre_test", codebook_path="FileList.csv")
     # test = EchoData("train_video", split="test")
