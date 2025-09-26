@@ -3,7 +3,7 @@
 - This is an official implementations for the paper "Dual-Mechanism Deep Imbalanced Regression for Accurate Right Ventricular Ejection Fraction Estimation from 2D Echocardiography"
 
 ### Framework
-![Framework](./save_fig/framework.png)
+![Framework](./save_fig/Framework.png)
 ### Requirements
 * CUDA>=11.3
   
@@ -40,10 +40,9 @@ python train.py
 
 ### Evaluation
 
-You can get the config file and pretrained model of KFBI-DETR (the link is in "Main Results" session), then run following command to evaluate it on COCO 2017 validation set:
 
 ```bash
-python main.py --resume <path to pre-trained model> --eval
+python evaluate.py
 ```
 
 You can also run distributed evaluation by using ```./tools/run_dist_launch.sh``` or ```./tools/run_dist_slurm.sh```.
