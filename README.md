@@ -45,4 +45,3 @@ python train.py
 python evaluate.py
 ```
 
-You can also run distributed evaluation by using ```./tools/run_dist_launch.sh``` or ```./tools/run_dist_slurm.sh```.
